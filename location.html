@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جلب الموقع</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    p {
+      font-size: 18px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>احصل على موقعك الجغرافي</h1>
+  <button onclick="getLocation()">جلب الموقع</button>
+  <p id="output"></p>
+
+  <script>
+    function getLocation() {
+      const output = document.getElementById("output");
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            output.innerHTML = `خط العرض: ${latitude}<br>خط الطول: ${longitude}`;
+          },
+          function (error) {
+            switch (error.code) {
+              case error.PERMISSION_DENIED:
+                output.innerHTML = "تم رفض الإذن للوصول إلى الموقع.";
+                break;
+              case error.POSITION_UNAVAILABLE:
+                output.innerHTML = "المعلومات عن الموقع غير متوفرة.";
+                break;
+              case error.TIMEOUT:
+                output.innerHTML = "انتهت المهلة للحصول على الموقع.";
+                break;
+              default:
+                output.innerHTML = "حدث خطأ غير معروف.";
+            }
+          }
+        );
+      } else {
+        output.innerHTML = "متصفحك لا يدعم Geolocation API.";
+      }
+    }
+  </script>
+</body>
+</html>

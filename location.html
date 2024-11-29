@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>جلب الموقع</title>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,7 +44,16 @@
           function (position) {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
-            output.innerHTML = `خط العرض: ${latitude}<br>خط الطول: ${longitude}`;
+
+            // استخدام مكتبة Esri Leaflet
+            const geocodeService = L.esri.Geocoding.geocodeService();
+            geocodeService.reverse().latlng([latitude, longitude]).run(function (error, result) {
+              if (error) {
+                output.innerHTML = "حدث خطأ أثناء جلب المعلومات.";
+                return;
+              }
+              output.innerHTML = `العنوان: ${result.address.Match_addr}`;
+            });
           },
           function (error) {
             switch (error.code) {

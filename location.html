@@ -7,29 +7,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://unpkg.com/esri-leaflet/dist/esri-leaflet.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    p {
-      font-size: 18px;
-      margin-top: 20px;
-    }
-  </style>
 </head>
 <body>
   <h1>احصل على موقعك الجغرافي</h1>
@@ -45,17 +22,21 @@
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
 
-            // استخدام مكتبة Esri Leaflet
+            console.log("Latitude:", latitude, "Longitude:", longitude);
+
             const geocodeService = L.esri.Geocoding.geocodeService();
             geocodeService.reverse().latlng([latitude, longitude]).run(function (error, result) {
               if (error) {
-                output.innerHTML = "حدث خطأ أثناء جلب المعلومات.";
+                console.error("Geocoding Error:", error);
+                output.innerHTML = "حدث خطأ أثناء جلب معلومات العنوان.";
                 return;
               }
+              console.log("Address:", result.address.Match_addr);
               output.innerHTML = `العنوان: ${result.address.Match_addr}`;
             });
           },
           function (error) {
+            console.error("Geolocation Error:", error);
             switch (error.code) {
               case error.PERMISSION_DENIED:
                 output.innerHTML = "تم رفض الإذن للوصول إلى الموقع.";

@@ -6,7 +6,7 @@
   <title>Fetch API Example</title>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      fetch('api.php')
+      fetch('http://abdelilah.atwebpages.com/api/api.php')
         .then(response => response.json())
         .then(data => {
           document.getElementById('message').textContent = data.message;

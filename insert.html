@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send Data to API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .user-input {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Send Data</h1>
+    <div class="user-input">
+        <input type="text" id="name" placeholder="Name">
+        <input type="number" id="age" placeholder="Age">
+        <input type="text" id="study" placeholder="Study">
+        <button onclick="addUser()">Add Users</button>
+    </div>
+
+    <button onclick="sendData()">Send Data </button>
+
+    <pre id="response"></pre>
+
+    <script>
+        const users = [];
+
+        function addUser() {
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+            const study = document.getElementById('study').value;
+
+            if (name && age && study) {
+                users.push({ name, age, study });
+                document.getElementById('name').value = '';
+                document.getElementById('age').value = '';
+                document.getElementById('study').value = '';
+                alert('User added!'); 
+            } else {
+                alert('Please fill in all fields');
+            }
+        }
+        async function sendData() {
+            if (users.length === 0) {
+                alert('No users to send');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost/dashboard/2m%20annes/learn%20json/api%20php/post.php', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(users)
+                });
+
+                const result = await response.json();
+                document.getElementById('response').textContent = JSON.stringify(result, null, 4);
+                users.length = 0; 
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('response').textContent = 'Error sending data!';
+            }
+        }
+    </script>
+
+</body>
+</html>

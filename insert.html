@@ -30,7 +30,7 @@
         <button onclick="addUser()">Add Users</button>
     </div>
 
-    <button onclick="sendData()">Send Data </button>
+    <button onclick="sendData()">Send Data</button>
 
     <pre id="response"></pre>
 
@@ -47,11 +47,12 @@
                 document.getElementById('name').value = '';
                 document.getElementById('age').value = '';
                 document.getElementById('study').value = '';
-                alert('User added!'); 
+                alert('User added!');
             } else {
                 alert('Please fill in all fields');
             }
         }
+
         async function sendData() {
             if (users.length === 0) {
                 alert('No users to send');
@@ -59,7 +60,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost/dashboard/2m%20annes/learn%20json/api%20php/post.php', { 
+                const response = await fetch('http://albaroudiabdelilah.atwebpages.com/api/post.php', { 
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -67,9 +68,29 @@
                     body: JSON.stringify(users)
                 });
 
-                const result = await response.json();
-                document.getElementById('response').textContent = JSON.stringify(result, null, 4);
-                users.length = 0; 
+                const text = await response.text(); // قراءة النص قبل التحويل
+
+                // تحقق مما إذا كانت الاستجابة هي HTML (وليس JSON)
+                if (text.startsWith("<")) {
+                    document.getElementById('response').textContent = "Server returned HTML (not JSON). Possible error on the server side.";
+                    console.error("Server returned HTML instead of JSON:", text);
+                    return;
+                }
+
+                try {
+                    const result = JSON.parse(text); // محاولة تحويل النص إلى JSON
+                    if (response.ok) {
+                        document.getElementById('response').textContent = JSON.stringify(result, null, 4);
+                        alert('Data sent successfully!');
+                    } else {
+                        document.getElementById('response').textContent = `Error: ${result.message || 'Unknown error'}`;
+                    }
+                } catch (e) {
+                    console.error('Error parsing JSON:', e);
+                    document.getElementById('response').textContent = 'Error parsing server response!';
+                }
+
+                users.length = 0; // إفراغ المصفوفة بعد الإرسال22
             } catch (error) {
                 console.error('Error:', error);
                 document.getElementById('response').textContent = 'Error sending data!';

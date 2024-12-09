@@ -3,49 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تحديد الموقع الدقيق</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <style>
-        #map { height: 100vh; }
-    </style>
+    <title>الحصول على الموقع</title>
 </head>
 <body>
-    <div id="map"></div>
+    <h1>احصل على موقعك الجغرافي</h1>
+    <button id="getLocationBtn">احصل على الإحداثيات</button>
+    <p id="output"></p>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // إنشاء خريطة Leaflet
-        const map = L.map('map').setView([0, 0], 2); // الإحداثيات الافتراضية
+        document.getElementById('getLocationBtn').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const latitude = position.coords.latitude; // خط العرض
+                    const longitude = position.coords.longitude; // خط الطول
+                    const accuracy = position.coords.accuracy; // دقة الموقع بالأمتار
 
-        // إضافة طبقة الخريطة
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
-
-        // جلب الموقع الدقيق
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                const latitude = position.coords.latitude;
-                const longitude = position.coords.longitude;
-
-                // تحديث عرض الخريطة
-                map.setView([latitude, longitude], 15);
-
-                // إضافة علامة إلى الموقع
-                L.marker([latitude, longitude]).addTo(map)
-                    .bindPopup(`موقعك الدقيق:<br>: ${latitude}<br>: ${longitude}`)
-                    .openPopup();
-            }, function(error) {
-                alert("تعذر الحصول على الموقع: " + error.message);
-            }, {
-                enableHighAccuracy: true, // محاولة استخدام أعلى دقة متاحة
-                timeout: 10000, // مهلة الاستجابة
-                maximumAge: 0 // لا تستخدم موقعًا قديمًا
-            });
-        } else {
-            alert("المتصفح لا يدعم ميزة تحديد الموقع الجغرافي.");
-        }
+                    // عرض الإحداثيات
+                    document.getElementById('output').innerText = 
+                        `الإحداثيات الخاصة بموقعك:\n` +
+                        `خط العرض: ${latitude}\n` +
+                        `خط الطول: ${longitude}\n` +
+                        `الدقة: ${accuracy} متر`;
+                }, function(error) {
+                    document.getElementById('output').innerText = 
+                        "تعذر الحصول على الموقع: " + error.message;
+                }, {
+                    enableHighAccuracy: true, // استخدام أعلى دقة متاحة
+                    timeout: 10000, // مهلة الاستجابة (10 ثوانٍ)
+                    maximumAge: 0 // لا تستخدم موقعًا مخزنًا قديمًا
+                });
+            } else {
+                document.getElementById('output').innerText = 
+                    "المتصفح لا يدعم ميزة الموقع الجغرافي.";
+            }
+        });
     </script>
 </body>
 </html>

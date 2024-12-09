@@ -1,68 +1,51 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>جلب الموقع</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 50px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    p {
-      font-size: 18px;
-      margin-top: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديد الموقع الدقيق</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        #map { height: 100vh; }
+    </style>
 </head>
 <body>
-  <h1>احصل على موقعك الجغرافي</h1>
-  <button onclick="getLocation()">جلب الموقع</button>
-  <p id="output"></p>
+    <div id="map"></div>
 
-  <script>
-    function getLocation() {
-      const output = document.getElementById("output");
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function (position) {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            output.innerHTML = `خط العرض: ${latitude}<br>خط الطول: ${longitude}`;
-          },
-          function (error) {
-            switch (error.code) {
-              case error.PERMISSION_DENIED:
-                output.innerHTML = "تم رفض الإذن للوصول إلى الموقع.";
-                break;
-              case error.POSITION_UNAVAILABLE:
-                output.innerHTML = "المعلومات عن الموقع غير متوفرة.";
-                break;
-              case error.TIMEOUT:
-                output.innerHTML = "انتهت المهلة للحصول على الموقع.";
-                break;
-              default:
-                output.innerHTML = "حدث خطأ غير معروف.";
-            }
-          }
-        );
-      } else {
-        output.innerHTML = "متصفحك لا يدعم Geolocation API.";
-      }
-    }
-  </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // إنشاء خريطة Leaflet
+        const map = L.map('map').setView([0, 0], 2); // الإحداثيات الافتراضية
+
+        // إضافة طبقة الخريطة
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // جلب الموقع الدقيق
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+
+                // تحديث عرض الخريطة
+                map.setView([latitude, longitude], 15);
+
+                // إضافة علامة إلى الموقع
+                L.marker([latitude, longitude]).addTo(map)
+                    .bindPopup(`موقعك الدقيق:<br>: ${latitude}<br>: ${longitude}`)
+                    .openPopup();
+            }, function(error) {
+                alert("تعذر الحصول على الموقع: " + error.message);
+            }, {
+                enableHighAccuracy: true, // محاولة استخدام أعلى دقة متاحة
+                timeout: 10000, // مهلة الاستجابة
+                maximumAge: 0 // لا تستخدم موقعًا قديمًا
+            });
+        } else {
+            alert("المتصفح لا يدعم ميزة تحديد الموقع الجغرافي.");
+        }
+    </script>
 </body>
 </html>

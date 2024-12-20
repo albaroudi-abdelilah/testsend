@@ -104,17 +104,15 @@
       formData.append('secret_key', secretKey);
 
       try {
-        const response = await fetch('https://abdelilah-albaroudi.infy.uk/emails/index.php', {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Origin': 'https://abdelilah-albaroudi.infy.uk',
-            'Referer': 'https://abdelilah-albaroudi.infy.uk/',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36'
-          }
-        });
+const response = await fetch('https://abdelilah-albaroudi.infy.uk/emails/index.php', {
+  method: 'POST',
+  body: formData,
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded',
+  },
+  mode: 'no-cors',
+});
+
 
         if (response.ok) {
           const result = await response.text();

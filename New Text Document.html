@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Downloader</title>
+</head>
+<body>
+    <h1>Video Downloader</h1>
+    <input type="text" id="videoUrl" placeholder="Enter video URL" style="width: 300px;">
+    <button onclick="downloadVideo()">Download Video</button>
+
+    <script>
+        async function downloadVideo() {
+            const videoUrl = document.getElementById('videoUrl').value;
+
+            if (!videoUrl) {
+                alert("Please enter a valid video URL.");
+                return;
+            }
+
+            try {
+                // Fetch the video content
+                const response = await fetch(videoUrl);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                // Convert the response to a Blob
+                const blob = await response.blob();
+
+                // Create a temporary link element
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = "video.mp4"; // You can customize the file name
+                document.body.appendChild(link);
+                link.click();
+
+                // Clean up
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(link.href);
+            } catch (error) {
+                alert("Failed to download the video. Error: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>

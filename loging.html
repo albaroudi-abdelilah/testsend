@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول باستخدام Google</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    #gSignInWrapper {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    #result {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #signOutWrapper {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="gSignInWrapper">
+    <div id="google-signin-button"></div> 
+  </div>
+  <div id="result"></div>
+  <div id="signOutWrapper">
+    <button id="signOutButton">تسجيل الخروج</button>
+  </div>
+
+  <script>
+
+    function initialize() {
+      google.accounts.id.initialize({
+        client_id: "596195585382-fer8amti3ka5mr6555jm2i64lukobiks.apps.googleusercontent.com",
+        callback: onSignIn
+      });
+
+      // عرض الزر بعد التهيئة
+      google.accounts.id.renderButton(
+        document.getElementById("google-signin-button"),
+        { theme: "outline", size: "large" } // خيارات الزر مثل الحجم والموضوع
+      );
+    }
+
+    // تحميل مكتبة Google Sign-In بشكل صحيح
+    window.onload = function () {
+      google.accounts.id.prompt(); // تظهر النافذة المنبثقة لتسجيل الدخول
+      initialize(); // تهيئة الزر بعد تحميل المكتبة
+    }
+
+    // الدالة التي سيتم استدعاؤها بعد تسجيل الدخول بنجاح
+    function onSignIn(response) {
+      const user = jwt_decode(response.credential); // فك تشفير الـ ID token للحصول على بيانات المستخدم
+      console.log(user); // عرض البيانات في الـ Console لتأكيد صحة البيانات
+
+      // إخفاء زر تسجيل الدخول
+      document.getElementById('gSignInWrapper').style.display = 'none';
+
+      // إظهار زر تسجيل الخروج
+      document.getElementById('signOutWrapper').style.display = 'block';
+
+      // عرض معلومات المستخدم في الصفحة
+      document.getElementById('result').innerHTML = `
+        <h2>معلومات المستخدم</h2>
+        <p><img src="${user.picture}" alt="صورة الملف الشخصي" style="width: 100px; height: 100px; border-radius: 50%;"></p>
+        <p>الاسم: ${user.name}</p>
+        <p>البريد الإلكتروني: ${user.email}</p>
+      `;
+    }
+
+    // دالة لتسجيل الخروج
+    function signOut() {
+      google.accounts.id.disableAutoSelect();
+      google.accounts.id.revoke(function(response) {
+        // إخفاء زر تسجيل الخروج
+        document.getElementById('signOutWrapper').style.display = 'none';
+        // إظهار زر تسجيل الدخول مرة أخرى
+        document.getElementById('gSignInWrapper').style.display = 'block';
+        // مسح معلومات المستخدم
+        document.getElementById('result').innerHTML = '';
+      });
+    }
+
+    // ربط دالة تسجيل الخروج بالزر
+    document.getElementById('signOutButton').addEventListener('click', signOut);
+  </script>
+
+  <!-- تضمين مكتبة لفك تشفير الـ ID token -->
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
+
+</body>
+</html>

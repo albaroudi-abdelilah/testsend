@@ -1,130 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Send Email</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f7f6;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .email-container {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 400px;
-      padding: 20px;
-    }
-
-    h1 {
-      text-align: center;
-      color: #4CAF50;
-    }
-
-    .form-group {
-      margin-bottom: 15px;
-    }
-
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-
-    input[type="email"],
-    input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 14px;
-    }
-
-    .send-button {
-      width: 100%;
-      padding: 10px;
-      background-color: #4CAF50;
-      border: none;
-      border-radius: 5px;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-    }
-
-    .send-button:hover {
-      background-color: #45a049;
-    }
-
-    .response-message {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #ff0000;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Detective</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+        .video-container {
+            position: relative;
+            margin: 20px 0;
+        }
+        #video, #canvas {
+            width: 100%;
+            max-width: 640px;
+            margin: auto;
+            display: block;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .status {
+            text-align: center;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+        #targetImage {
+            max-width: 200px;
+            margin: 10px auto;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-  <div class="email-container">
-    <h1>Send Email</h1>
-    <form id="emailForm" method="post">
-      <div class="form-group">
-        <label for="email">Recipient Email:</label>
-        <input type="email" id="email" name="recipient_email" placeholder="Enter recipient's email" required>
-      </div>
-
-      <div class="form-group">
-        <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" placeholder="Enter email subject" required>
-      </div>
-
-      <button type="submit" class="send-button">Send Email</button>
-    </form>
-    <div class="response-message" id="responseMessage"></div>
-  </div>
-
-  <script>
-    const secretKey = "abdelilahelbaroudi1";
-
-    document.getElementById('emailForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-
-      const formData = new FormData();
-      formData.append('recipient_email', document.getElementById('email').value);
-      formData.append('subject', document.getElementById('subject').value);
-      formData.append('secret_key', secretKey);
-
-      try {
-const response = await fetch('https://abdelilah-albaroudi.infy.uk/emails/index.php', {
-  method: 'POST',
-  body: formData,
-  headers: {
-    'Content-Type': 'application/x-www-form-urlencoded',
-  },
-  mode: 'no-cors',
-});
-
-
-        if (response.ok) {
-          const result = await response.text();
-          document.getElementById('responseMessage').innerText = result;
-        } else {
-          document.getElementById('responseMessage').innerText = 'Error sending email. Server responded with an error.';
-        }
-      } catch (error) {
-        document.getElementById('responseMessage').innerText = 'Error sending email. Please try again.';
-        console.error('Error:', error);
-      }
-    });
-  </script>
+    <div class="container">
+        <h1>Face Detective</h1>
+        <div class="controls">
+            <input type="file" id="imageUpload" accept="image/*" style="display: none">
+            <button class="button" onclick="document.getElementById('imageUpload').click()">Upload Target Face</button>
+        </div>
+        <img id="targetImage" style="display: none">
+        <div class="video-container">
+            <video id="video" autoplay muted></video>
+            <canvas id="canvas"></canvas>
+        </div>
+        <div id="status" class="status"></div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

@@ -93,14 +93,14 @@
         let targetDescriptor = null;
         const STATUS = document.getElementById('status');
 
-        // Load face-api models
+        // Load face-api models from your server
         async function loadModels() {
             STATUS.textContent = 'Loading models...';
             try {
                 await Promise.all([
-                    faceapi.nets.faceRecognitionNet.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/weights'),
-                    faceapi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/weights'),
-                    faceapi.nets.ssdMobilenetv1.loadFromUri('https://cdn.jsdelivr.net/npm/face-api.js/weights')
+                    faceapi.nets.faceRecognitionNet.loadFromUri('/weights'),
+                    faceapi.nets.faceLandmark68Net.loadFromUri('/weights'),
+                    faceapi.nets.ssdMobilenetv1.loadFromUri('/weights')
                 ]);
                 STATUS.textContent = 'Models loaded! You can now upload a target image.';
                 STATUS.className = 'status success';
@@ -185,13 +185,6 @@
                     if (distance < 0.6) {
                         ctx.strokeStyle = '#00ff00'; // Green for match
                         ctx.strokeRect(box.x, box.y, box.width, box.height);
-                        if (!document.querySelector('.match-found')) {
-                            window.open('https://www.google.com', '_blank');
-                            const matchMessage = document.createElement('div');
-                            matchMessage.textContent = 'Match Found! Opened Google in a new tab.';
-                            matchMessage.classList.add('status', 'match-found', 'success');
-                            document.body.appendChild(matchMessage);
-                        }
                     } else {
                         ctx.strokeStyle = '#ff0000'; // Red for non-match
                         ctx.strokeRect(box.x, box.y, box.width, box.height);

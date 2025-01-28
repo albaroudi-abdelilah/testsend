@@ -98,10 +98,11 @@
             STATUS.textContent = 'Loading models...';
             try {
                 await Promise.all([
-                    faceapi.nets.faceRecognitionNet.loadFromUri('/weights'),
-                    faceapi.nets.faceLandmark68Net.loadFromUri('/weights'),
-                    faceapi.nets.ssdMobilenetv1.loadFromUri('/weights')
-                ]);
+    faceapi.nets.faceRecognitionNet.loadFromUri('./Weights'),
+    faceapi.nets.faceLandmark68Net.loadFromUri('./Weights'),
+    faceapi.nets.ssdMobilenetv1.loadFromUri('./Weights')
+]);
+
                 STATUS.textContent = 'Models loaded! You can now upload a target image.';
                 STATUS.className = 'status success';
                 startVideo();

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Detective</title>
     <style>
-        /* Previous styles remain the same */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -72,14 +71,10 @@
             display: block;
         }
     </style>
-    <!-- Load face-api.js from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Face </h1>
+        <h1>Face Detective</h1>
         <div class="controls">
             <input type="file" id="imageUpload" accept="image/*" style="display: none">
             <button class="button" onclick="document.getElementById('imageUpload').click()">Upload Target Face</button>
@@ -92,6 +87,10 @@
         <div id="status" class="status"></div>
     </div>
 
+    <!-- Load dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
     <script>
         let video;
         let canvas;
@@ -101,15 +100,17 @@
         // Wait for face-api.js to load
         window.onload = async () => {
             try {
-                await faceapi.nets.faceRecognitionNet.loadFromUri('/weights');
-                await faceapi.nets.faceLandmark68Net.loadFromUri('/weights');
-                await faceapi.nets.ssdMobilenetv1.loadFromUri('/weights');
+                STATUS.textContent = 'Loading models...';
+                // Use models from CDN
+                await faceapi.nets.faceRecognitionNet.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
+                await faceapi.nets.faceLandmark68Net.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
+                await faceapi.nets.ssdMobilenetv1.loadFromUri('https://raw.githubusercontent.com/justadudewhohacks/face-api.js/master/weights');
                 
                 STATUS.textContent = 'Models loaded! You can now upload a target image.';
                 STATUS.className = 'status success';
                 startVideo();
             } catch (error) {
-                STATUS.textContent = 'Error loading models. Please check weights directory path.';
+                STATUS.textContent = 'Error loading models. Please check your internet connection.';
                 STATUS.className = 'status error';
                 console.error('Error loading models:', error);
             }

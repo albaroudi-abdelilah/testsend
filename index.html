@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Detective</title>
     <style>
+        /* Previous styles remain the same */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -71,10 +72,14 @@
             display: block;
         }
     </style>
+    <!-- Load face-api.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/blazeface"></script>
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>face Detective</h1>
+        <h1>Face </h1>
         <div class="controls">
             <input type="file" id="imageUpload" accept="image/*" style="display: none">
             <button class="button" onclick="document.getElementById('imageUpload').click()">Upload Target Face</button>
@@ -86,32 +91,29 @@
         </div>
         <div id="status" class="status"></div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js"></script>
+
     <script>
         let video;
         let canvas;
         let targetDescriptor = null;
         const STATUS = document.getElementById('status');
 
-        // Load face-api models from your server
-        async function loadModels() {
-            STATUS.textContent = 'Loading models...';
+        // Wait for face-api.js to load
+        window.onload = async () => {
             try {
-                await Promise.all([
-    faceapi.nets.faceRecognitionNet.loadFromUri('./Weights'),
-    faceapi.nets.faceLandmark68Net.loadFromUri('./Weights'),
-    faceapi.nets.ssdMobilenetv1.loadFromUri('./Weights')
-]);
-
+                await faceapi.nets.faceRecognitionNet.loadFromUri('/weights');
+                await faceapi.nets.faceLandmark68Net.loadFromUri('/weights');
+                await faceapi.nets.ssdMobilenetv1.loadFromUri('/weights');
+                
                 STATUS.textContent = 'Models loaded! You can now upload a target image.';
                 STATUS.className = 'status success';
                 startVideo();
             } catch (error) {
-                STATUS.textContent = 'Error loading models. Please refresh the page.';
+                STATUS.textContent = 'Error loading models. Please check weights directory path.';
                 STATUS.className = 'status error';
                 console.error('Error loading models:', error);
             }
-        }
+        };
 
         // Start video stream
         async function startVideo() {
@@ -197,9 +199,6 @@
 
             detectFaces();
         }
-
-        // Start the application
-        document.addEventListener('DOMContentLoaded', loadModels);
     </script>
 </body>
 </html>

